@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 Injeta <link rel="canonical"> e <link rel="alternate" hreflang> em todos os HTML.
-- URLs são relativas à raiz do site (/path) para funcionar em qualquer domínio/subdomínio.
+- URLs absolutas com HTTPS (Google recomenda URLs completas em canonical/hreflang).
 - Páginas legadas duplicadas apontam canonical para a URL preferida (evita cópia sem canônica).
+
+Para mudar o domínio, edite SITE_ORIGIN abaixo e execute: python tools/apply_seo_canonical_hreflang.py
 """
 from __future__ import annotations
 
@@ -11,13 +13,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Domínio de produção (sem barra final)
+SITE_ORIGIN = "https://pdf.convertflash.com"
+
+
+def full_url(path: str) -> str:
+    """Converte caminho de site (/pagina.html ou /) em URL absoluta."""
+    if path == "/":
+        return f"{SITE_ORIGIN}/"
+    if not path.startswith("/"):
+        path = "/" + path
+    return f"{SITE_ORIGIN}{path}"
+
+
 # Cada cluster: ordem fixa para hreflang (pt-BR, en, es, x-default)
+# Caminhos relativos à raiz do site; full_url() acrescenta SITE_ORIGIN.
 CLUSTERS: dict[str, dict[str, str]] = {
     "home": {
-        "pt-BR": "/index.html",
+        "pt-BR": "/",
         "en": "/en.html",
         "es": "/es.html",
-        "x-default": "/index.html",
+        "x-default": "/",
     },
     "privacy": {
         "pt-BR": "/politica-privacidade.html",
@@ -115,16 +131,16 @@ REMOVE_PATTERNS = [
 ]
 
 
-def build_seo_block(cluster_id: str, canonical: str) -> str:
+def build_seo_block(cluster_id: str, canonical_path: str) -> str:
     c = CLUSTERS[cluster_id]
     lines = [
         "",
-        '  <!-- Canonical + hreflang (raiz do site; ajuste em subpasta — ver docs/SEO-INDEXACAO.md) -->',
-        f'  <link rel="canonical" href="{canonical}" />',
+        "  <!-- Canonical + hreflang (domínio: pdf.convertflash.com) -->",
+        f'  <link rel="canonical" href="{full_url(canonical_path)}" />',
     ]
     order = ["pt-BR", "en", "es", "x-default"]
     for k in order:
-        lines.append(f'  <link rel="alternate" hreflang="{k}" href="{c[k]}" />')
+        lines.append(f'  <link rel="alternate" hreflang="{k}" href="{full_url(c[k])}" />')
     lines.append("")
     return "\n".join(lines)
 

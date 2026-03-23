@@ -4,7 +4,9 @@
 
 1. **`<link rel="canonical">`** em todas as páginas HTML, apontando para a **URL preferida** (evita “cópia sem página canônica” no Search Console).
 2. **`<link rel="alternate" hreflang="...">`** para **pt-BR**, **en**, **es** e **`x-default`** (português como padrão), para o Google relacionar idiomas sem tratá-los como duplicata acidental.
-3. **URLs absolutas a partir da raiz do site** (`/index.html`, `/en.html`, …). O navegador e o Google resolvem isso contra o **mesmo host** (incluindo subdomínio), sem precisar fixar domínio no HTML.
+3. **URLs absolutas com HTTPS** no domínio de produção **`https://pdf.convertflash.com` (definido em `SITE_ORIGIN` em `tools/apply_seo_canonical_hreflang.py`).
+
+Para alterar o domínio no futuro, edite `SITE_ORIGIN` e execute novamente o script de regeneração.
 
 ### Páginas legadas (duplicadas)
 
