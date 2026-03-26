@@ -16,7 +16,7 @@ Arquivos antigos em inglês/espanhol (`privacy-policy.html`, `terms-of-use.html`
 
 Se publicar em `https://exemplo.com/ferramenta/` em vez da raiz:
 
-- Ajuste os `href` em **todas** as tags para incluir o prefixo, por exemplo `/ferramenta/index.html`, **ou**
+- Ajuste os `href` em **todas** as tags para incluir o prefixo, por exemplo `/ferramenta/`, **ou**
 - Execute de novo `python tools/apply_seo_canonical_hreflang.py` após editar o script para prefixar um `BASE_PATH` (recomendado manter um único lugar no código).
 
 ## Redirecionamento e erros no Google Search Console
@@ -32,7 +32,7 @@ Se publicar em `https://exemplo.com/ferramenta/` em vez da raiz:
 Erros de **“Redirecionamento”** costumam vir do **servidor**:
 
 - Cadeia **HTTP → HTTPS** ou **non-www → www** com mais de um salto.
-- Regra que redireciona `/index.html` ↔ `/` em loop.
+- Regra que redireciona URLs limpas em loop (ex.: `/` ↔ outra variação da home).
 - Regra de “idioma do browser” no painel do host.
 
 **Boas práticas:**
